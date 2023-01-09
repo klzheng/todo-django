@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import Background from "./components/Background";
 import Container from "./components/Container";
 import "./App.css";
+import TaskList from "./components/TaskList";
 
 function App() {
     const [todoList, SetTodoList] = useState([]);
@@ -14,13 +15,12 @@ function App() {
     });
 
     const fetchTasks = useCallback(() => {
-        console.log("Fetching...");
+        console.log("Fetching data...");
 
         fetch("http://127.0.0.1:8000/api/todo-list/")
             .then((response) => response.json())
             .then((data) => {
                 SetTodoList(data);
-                console.log(data);
             });
     }, []);
 
@@ -52,6 +52,27 @@ function App() {
         })
     };
 
+    const updateItem = (e) => {
+        e.preventDefault()
+        const url = `http://127.0.0.1:8000/api/todo-update/${activeItem.id}/`
+        fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify(activeItem)
+        }).then(() => {
+            fetchTasks()
+            SetActiveItem({
+                id: null,
+                title: "",
+                completed: false,
+            })
+            SetEditing(false)
+            console.log("Item updated")
+        })
+    }
+
     useEffect(() => {
         fetchTasks();
     }, [fetchTasks]);
@@ -59,22 +80,31 @@ function App() {
     return (
         <Background>
             <Container>
-                <Form onSubmit={handleSubmit} className="form-container">
+                <Form onSubmit={editing ? updateItem : handleSubmit} className="form-container">
                     <Row>
-                        <Col>
+                        <Col >
                             <Form.Control
                                 onChange={handleChange}
                                 type="textarea"
                                 placeholder="Add task..."
+                                value={activeItem.title}
+                                id="task-item"
                             />
                         </Col>
                         <Col xs="auto">
-                            <Button variant="primary" type="submit">
-                                Create Item
+                            <Button variant={editing ? "success" : "primary"} type="submit">
+                                {editing ? "Update Item" : "Create Item"}
                             </Button>
                         </Col>
                     </Row>
                 </Form>
+                <TaskList 
+                    tasks={todoList} 
+                    fetchTasks={fetchTasks}
+                    SetActiveItem={SetActiveItem} 
+                    SetEditing={SetEditing}
+                >
+                </TaskList>
             </Container>
         </Background>
     );
