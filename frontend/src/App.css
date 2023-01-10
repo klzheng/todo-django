@@ -43,11 +43,11 @@
 }
 
 .form-container {
-    margin: 5% 5% 3% 5%;
+    margin: 20px;
 }
 
 .form-inline {
-    margin: 10px 5%;
+    margin: 10px 20px;
     display: flex;
     justify-content: space-between;
 }
@@ -63,6 +63,16 @@
 }
 
 .task-list-container {
+    position: relative;
     overflow-y: scroll;
-    height: 75%;
+    height: 70%;
+}
+
+.strike-through {
+    text-decoration: line-through;
+}
+
+.app-title {
+    text-align: center;
+    margin: 20px;
 }

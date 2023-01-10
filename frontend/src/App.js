@@ -4,6 +4,7 @@ import Background from "./components/Background";
 import Container from "./components/Container";
 import "./App.css";
 import TaskList from "./components/TaskList";
+import Title from "./components/Title";
 
 function App() {
     const [todoList, SetTodoList] = useState([]);
@@ -80,9 +81,12 @@ function App() {
     return (
         <Background>
             <Container>
-                <Form onSubmit={editing ? updateItem : handleSubmit} className="form-container">
+                <Form 
+                    onSubmit={editing ? updateItem : handleSubmit} className="form-container"
+                >
+                    <Title />
                     <Row>
-                        <Col >
+                        <Col>
                             <Form.Control
                                 onChange={handleChange}
                                 type="textarea"
